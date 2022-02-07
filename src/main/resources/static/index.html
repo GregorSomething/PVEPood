@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Pood</title>
+
+    <link rel="stylesheet" href="/index.css">
+    <script src="https://unpkg.com/vue@next"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+</head>
+<body style="margin: 0;">
+    <div id="app">
+        <section id="login" v-if="screen == 'login'">
+            <h1 class="form-signin-heading">Sisse logimine</h1>
+            <div class="content">
+                <form v-on:submit="UI_onSubmitLogin" method="post" action="/login">
+                    <p class="field">
+                        <label for="username">KASUTAJA</label>
+                        <input type="text" id="username" name="username" placeholder="" required autofocus="">
+                    </p>
+                    <p class="field">
+                        <label for="password">PAROOL</label>
+                        <input type="password" id="password" name="password" placeholder="" required>
+                    </p>
+                    <p class="field">
+                        <input type="checkbox" id="remember-me" name="remember-me">
+                        <label for="remember-me">Püsi sisse logitud?</label>
+                    </p>
+    
+                    <button type="submit">Sisene</button>
+                </form>
+                <div class="buffer"></div>
+            </div>
+        </section>
+        <section id="login" v-if="screen == 'register'">
+            <h1 class="form-signin-heading">Registreerimine</h1>
+            <div class="content">
+                <form v-on:submit="UI_onSubmitRegister" method="post" action="/register">
+                    <p class="field">
+                        <label for="username">KASUTAJA</label>
+                        <input type="text" id="username" name="username" placeholder="" required autofocus="">
+                    </p>
+                    <p class="field">
+                        <label for="username">TÄIS NIMI</label>
+                        <input type="text" id="displayName" name="displayName" placeholder="" required autofocus="">
+                    </p>
+                    <p class="field">
+                        <label for="password">PAROOL</label>
+                        <input type="password" id="password" name="password" placeholder="" required>
+                    </p>
+    
+                    <button type="submit">Registreeri</button>
+                </form>
+                <div class="buffer"></div>
+            </div>
+        </section>
+        <section id="home" v-if="screen == 'home'">
+            <h1>Tooted</h1>
+            <div class="content products">
+                <div class="product" v-for="(item, i) in products">
+                    <p class="category">/ {{ item.category }}</p>
+                    <p class="type">{{ item.type }}</p>
+                    <div class="row tags">
+                        <p class="cheap" v-if="item.price < 5">Ainult {{ item.price.toFixed(2) }} €</p>
+                        <p class="low-quantity" v-if="item.count <= 10">Ainult {{ item.count }} järgi</p>
+                    </div>
+                    <img :src="item.imageUrl" :alt="item.description">
+                    <p class="name">{{ item.name }}</p>
+                    <p class="count">Laos {{ item.count }} {{ item.count > 1 ? 'tükki' : 'tükk' }}</p>
+                    <p class="price">{{ item.price }} €</p>
+                </div>
+                <div class="buffer"></div>
+            </div>
+        </section>
+    </div>   
+    <script src="/index.js"></script> 
+</body>
+</html>

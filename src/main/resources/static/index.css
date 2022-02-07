@@ -1,0 +1,236 @@
+:root {
+    --bg: 255, 255, 255;
+    --margin: 64px;
+    --product-gap: 24px;
+}
+
+body {
+    background-color: rgb(var(--bg));
+}
+
+* {
+    box-sizing: border-box;
+}
+
+p, h1, h2, h3, h4, h5, h6, a, button, input, label {
+    margin: 0;
+    font-family: 'Open Sans', 'Helvetica', 'Arial';
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+button {
+    padding: 8px 24px;
+
+    background-color: white;
+    border: solid 1px transparent;
+
+    font-size: 16px;
+    font-weight: 400;
+    color: #000;
+    border-radius: 4px;
+
+    box-shadow: 0 4px 8px #0001, 0 1px 4px #0001;
+
+    transition: box-shadow 0.2s, border 0.2s;
+}
+button:hover {
+    cursor: pointer;
+
+    box-shadow: none;
+    border: solid 1px #ddd;
+}
+button:active {
+    border: solid 1px transparent;
+    box-shadow: inset 0 4px 8px #0001, inset 0 1px 4px #0001;
+}
+
+
+
+
+
+#app {
+    width: 100%;
+}
+
+#app > section {
+    display: flex;
+    flex-direction: row-reverse;
+
+    margin: 0 0 0 var(--margin);
+    padding: var(--margin) var(--margin) var(--margin) 0;
+    
+    height: calc(100vh);
+    overflow-y: auto;
+}
+#app > section > .content {
+    box-sizing: content-box;
+    margin-bottom: 64px;
+}
+#app > section > .content > .buffer {
+    width: 100%;
+    height: calc(var(--margin) - var(--product-gap));
+    clear: both;
+}
+#app > section > h1 {
+    position: sticky;
+    top: 0;
+
+    writing-mode: vertical-rl;
+    font-size: 36px;
+    color: #000;
+    text-transform: lowercase;
+
+    backdrop-filter: blur(8px);
+    margin: 0 16px;
+    padding: 16px;
+
+    height: 100%;
+
+    background: repeating-linear-gradient(
+        45deg,
+        #0000,
+        #0000 10px,
+        #ddd 10px,
+        #ddd 12px
+    );
+}
+
+
+
+
+#home > .products {
+    user-select: none;
+    
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+
+    gap: var(--product-gap);
+}
+
+#home > .products > .product {
+    display: flex;
+    flex-direction: column;
+
+    width: 240px;
+    padding: 8px;
+
+    background-color: #fff;
+    box-shadow: none;
+    border: solid 1px #ddd;
+    transition: box-shadow 0.2s, border 0.2s;
+}
+#home > .products > .product:hover {
+    border: solid 1px transparent;
+    box-shadow: 0 8px 32px #0002, 0 4px 8px #0004;
+}
+#home > .products > .product > .category {
+    font-weight: 700;
+    font-size: 14px;
+}
+#home > .products > .product > .type {
+    font-weight: 700;
+    font-size: 28px;
+}
+#home > .products > .product > .tags > * {
+    font-weight: 700;
+    font-size: 12px;
+    
+    padding: 0 8px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 10px;
+
+    color: white;
+}
+#home > .products > .product > .tags { gap: 4px; margin-bottom: 8px; }
+#home > .products > .product > .tags > .cheap { background-color: #2c4; }
+#home > .products > .product > .tags > .low-quantity { background-color: #e44; }
+
+#home > .products > .product > img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+#home > .products > .product > .name {
+    font-weight: 700;
+    font-size: 18px;
+}
+#home > .products > .product > .price {
+    width: 100%;
+    padding: 8px 0;
+    text-align: center;
+
+    font-weight: 900;
+    font-size: 18px;
+
+    color: #aa8;
+}
+#home > .products > .product > .count {
+    font-weight: 500;
+    font-size: 12px;
+
+    color: #888;
+}
+
+
+
+
+
+#login > .content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /*flex-start*/
+    align-items: center;
+    gap: 16px;
+}
+
+#login > .content > form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+
+    width: min(400px, 100%);
+}
+#login > .content > form > * {
+    width: 100%;
+}
+
+#login .field {
+    padding: 8px;
+    border: solid 1px #ddd;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    border-radius: 4px;
+    white-space: nowrap;
+}
+#login .field label[for="username"],
+#login .field label[for="password"] {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ccc;
+}
+#login .field input[type="text"],
+#login .field input[type="password"] {
+    width: 100%;
+    border: none;
+    font-size: 16px;
+}
+#login .field input[type="text"]:focus,
+#login .field input[type="password"]:focus {
+    border: none;
+    outline: none;
+}
