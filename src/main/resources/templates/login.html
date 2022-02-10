@@ -1,104 +1,43 @@
-<html lang="en"><head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>See on varastatud muuda see</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous">
-    <script type="text/javascript" data-name="TokenSigning">(function() {
-    // Promises
-    var _eid_promises = {};
-    // Turn the incoming message from extension
-    // into pending Promise resolving
-    window.addEventListener("message", function(event) {
-        if (event.source !== window) return;
-        if (event.data.src && (event.data.src === "background.js")) {
-            console.log("Page received: ");
-            console.log(event.data);
-            // Get the promise
-            if (event.data.nonce) {
-                var p = _eid_promises[event.data.nonce];
-                // resolve
-                if (event.data.result === "ok") {
-                    if (event.data.signature !== undefined) {
-                        p.resolve({hex: event.data.signature});
-                    } else if (event.data.version !== undefined) {
-                        p.resolve(event.data.extension + "/" + event.data.version);
-                    } else if (event.data.cert !== undefined) {
-                        p.resolve({hex: event.data.cert});
-                    } else {
-                        console.log("No idea how to handle message");
-                        console.log(event.data);
-                    }
-                } else {
-                    // reject
-                    p.reject(new Error(event.data.result));
-                }
-                delete _eid_promises[event.data.nonce];
-            } else {
-                console.log("No nonce in event msg");
-            }
-        }
-    }, false);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Pood</title>
 
-    window.TokenSigning = function() {
-        function nonce() {
-            var val = "";
-            var hex = "abcdefghijklmnopqrstuvwxyz0123456789";
-            for (var i = 0; i < 16; i++) val += hex.charAt(Math.floor(Math.random() * hex.length));
-            return val;
-        }
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://unpkg.com/vue@next"></script>
 
-        function messagePromise(msg) {
-            return new Promise(function(resolve, reject) {
-                // amend with necessary metadata
-                msg["nonce"] = nonce();
-                msg["src"] = "page.js";
-                // send message
-                window.postMessage(msg, "*");
-                // and store promise callbacks
-                _eid_promises[msg.nonce] = {
-                    resolve: resolve,
-                    reject: reject
-                };
-            });
-        }
-        this.getCertificate = function(options) {
-            var msg = {type: "CERT", lang: options.lang, filter: options.filter};
-            console.log("getCertificate()");
-            return messagePromise(msg);
-        };
-        this.sign = function(cert, hash, options) {
-            var msg = {type: "SIGN", cert: cert.hex, hash: hash.hex, hashtype: hash.type, lang: options.lang, info: options.info};
-            console.log("sign()");
-            return messagePromise(msg);
-        };
-        this.getVersion = function() {
-            console.log("getVersion()");
-            return messagePromise({
-                type: "VERSION"
-            });
-        };
-    };
-})();</script></head>
-<body>
-<div class="container">
-    <form class="form-signin" method="post" action="/login">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <p>
-            <label for="username" class="sr-only">Username</label>
-            <input type="text" id="username" name="username" class="form-control" placeholder="Username" required="" autofocus="">
-        </p>
-        <p>
-            <label for="password" class="sr-only">Password</label>
-            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required="">
-        </p>
-        <p>
-            Remember me?
-            <input type="checkbox" id="remember-me" name="remember-me" class="form-control">
-        </p>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    </form>
-</div>
-</body></html>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+</head>
+<body style="margin: 0;">
+    <div id="app">
+        <section id="login">
+            <h1 class="form-signin-heading">Sisse logimine</h1>
+            <div class="content">
+                <form v-on:submit="UI_onSubmitLogin" method="post" action="/login">
+                    <p class="field">
+                        <label for="username">KASUTAJA</label>
+                        <input type="text" id="username" name="username" placeholder="" required autofocus="">
+                    </p>
+                    <p class="field">
+                        <label for="password">PAROOL</label>
+                        <input type="password" id="password" name="password" placeholder="" required>
+                    </p>
+                    <p class="field">
+                        <input type="checkbox" id="remember-me" name="remember-me">
+                        <label for="remember-me">Püsi sisse logitud?</label>
+                    </p>
+    
+                    <button type="submit">Sisene</button>
+                </form>
+                <div class="buffer"></div>
+            </div>
+        </section>
+    </div>   
+    <script src="/js/script.js"></script>
+</body>
+</html>

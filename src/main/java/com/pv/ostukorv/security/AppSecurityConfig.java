@@ -1,6 +1,5 @@
 package com.pv.ostukorv.security;
 
-import com.pv.ostukorv.security.data.AppRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -37,7 +36,6 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                     .antMatchers("/api/shop/all", "/api/shop/list/**").permitAll()
-                    .antMatchers("/demo/**").hasRole(AppRoles.ADMIN.name())
                     .anyRequest()
                     .authenticated()
                 .and()

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Pood</title>
 
-    <link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="/css/style.css">
     <script src="https://unpkg.com/vue@next"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,51 +15,7 @@
 </head>
 <body style="margin: 0;">
     <div id="app">
-        <section id="login" v-if="screen == 'login'">
-            <h1 class="form-signin-heading">Sisse logimine</h1>
-            <div class="content">
-                <form v-on:submit="UI_onSubmitLogin" method="post" action="/login">
-                    <p class="field">
-                        <label for="username">KASUTAJA</label>
-                        <input type="text" id="username" name="username" placeholder="" required autofocus="">
-                    </p>
-                    <p class="field">
-                        <label for="password">PAROOL</label>
-                        <input type="password" id="password" name="password" placeholder="" required>
-                    </p>
-                    <p class="field">
-                        <input type="checkbox" id="remember-me" name="remember-me">
-                        <label for="remember-me">Püsi sisse logitud?</label>
-                    </p>
-    
-                    <button type="submit">Sisene</button>
-                </form>
-                <div class="buffer"></div>
-            </div>
-        </section>
-        <section id="login" v-if="screen == 'register'">
-            <h1 class="form-signin-heading">Registreerimine</h1>
-            <div class="content">
-                <form v-on:submit="UI_onSubmitRegister" method="post" action="/register">
-                    <p class="field">
-                        <label for="username">KASUTAJA</label>
-                        <input type="text" id="username" name="username" placeholder="" required autofocus="">
-                    </p>
-                    <p class="field">
-                        <label for="username">TÄIS NIMI</label>
-                        <input type="text" id="displayName" name="displayName" placeholder="" required autofocus="">
-                    </p>
-                    <p class="field">
-                        <label for="password">PAROOL</label>
-                        <input type="password" id="password" name="password" placeholder="" required>
-                    </p>
-    
-                    <button type="submit">Registreeri</button>
-                </form>
-                <div class="buffer"></div>
-            </div>
-        </section>
-        <section id="home" v-if="screen == 'home'">
+        <section id="home">
             <h1>Tooted</h1>
             <div class="content products">
                 <div class="product" v-for="(item, i) in products">
@@ -78,6 +34,6 @@
             </div>
         </section>
     </div>   
-    <script src="/index.js"></script> 
+    <script src="/js/script.js"></script>
 </body>
 </html>

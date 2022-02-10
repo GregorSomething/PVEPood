@@ -4,7 +4,7 @@
 const app = Vue.createApp({
     data() {
         return {
-            screen: 'login',
+            screen: 'register',
             // Type: [{name: String, description: String, price: float, type: String, category: String, count: int, imageUrl: String}]
             products: [
                 {id: 0, name: "Retro Burger", description: "Human food", price: 3.99, type: "Burger", category: "Toit", count: 347, imageUrl: 'https://mamma.ee/arendus/wp-content/uploads/2020/11/Mamma-Retroburger-230g.jpg'},
