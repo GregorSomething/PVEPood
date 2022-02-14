@@ -1,21 +1,18 @@
 package com.pv.ostukorv.api;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/")
 public class LoginController {
 
-    @GetMapping("/login")
+    @RequestMapping(path="/login")
     public String getLoginView() {
-        return "login";
+        return "login.html";
     }
 
-    //@RequestMapping(path = "/register", method = RequestMethod.GET, produces = "text/html")
+    @RequestMapping(path = "/register")
     public String getRegisterView() {
-        return "register";
+        return "register.html";
     }
 }
