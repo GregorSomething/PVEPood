@@ -36,13 +36,21 @@ public class CartController {
         }
         if (userCartRepo.existsById(username)) {
             UserCart cart = userCartRepo.findById(username).orElseThrow();
-            cart.addDbItem(id, quantity);
+            if (quantity <= 0) {
+                cart.removeDbItems(id);
+            } else {
+                cart.setDbItem(id, quantity);
+            }
             userCartRepo.save(cart);
         } else {
             UserCart cart = new UserCart();
             cart.setUsername(username);
             cart.setDbItems(new HashMap<>());
-            cart.setDbItem(id, quantity);
+            if (quantity <= 0) {
+                cart.removeDbItems(id);
+            } else {
+                cart.setDbItem(id, quantity);
+            }
             userCartRepo.save(cart);
         }
     }
