@@ -47,9 +47,11 @@ public class UserCartData extends UserCart {
             jsonGenerator.writeNumberField("price", userCartData.getPrice());
             jsonGenerator.writeArrayFieldStart("items");
             userCartData.getItems().forEach((item, integer) -> {
-                item.setCount(integer);
                 try {
-                    jsonGenerator.writeObject(item);
+                    jsonGenerator.writeStartObject();
+                    jsonGenerator.writeObjectField("item", item);
+                    jsonGenerator.writeNumberField("cartCount", integer);
+                    jsonGenerator.writeEndObject();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

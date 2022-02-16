@@ -83,9 +83,6 @@ public class AppUser implements UserDetails {
     public ArrayList<String> getsRoles() {
         return sRoles;
     }
-    public String getClientPass() {
-        return clientPass;
-    }
 
     public void setUsername(String username) {
         this.username = username;
