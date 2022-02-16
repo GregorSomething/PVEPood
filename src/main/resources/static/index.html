@@ -15,7 +15,7 @@
 </head>
 <body style="margin: 0;">
     <div id="app">
-        <section id="home">
+        <section id="home" v-if="screen == 'home'">
             <h1>Tooted</h1>
             <div class="content products">
                 <div class="product" v-for="(item, i) in products">
@@ -25,10 +25,50 @@
                         <p class="cheap" v-if="item.price < 5">Ainult {{ item.price.toFixed(2) }} €</p>
                         <p class="low-quantity" v-if="item.count <= 10">Ainult {{ item.count }} järgi</p>
                     </div>
-                    <img :src="item.imageUrl" :alt="item.description">
+                    <img :src="item.imgUrl" :alt="item.description">
                     <p class="name">{{ item.name }}</p>
                     <p class="count">Laos {{ item.count }} {{ item.count > 1 ? 'tükki' : 'tükk' }}</p>
-                    <p class="price">{{ item.price }} €</p>
+                    <div class="row addToCart">
+                        <div class="countButton" v-on:click="decrementCount(item.id)">
+                            <p>-</p>
+                        </div>
+                        <div class="column">
+                            <p class="price">{{ item.price }} €</p>
+                            <p class="cartCount" v-if="findCartProduct(item.id)">{{ findCartProduct(item.id).cartCount }} {{ findCartProduct(item.id).cartCount == 1 ? 'tükk' : 'tükki' }} ostukärus</p>
+                        </div>
+                        <div class="countButton" v-on:click="incrementCount(item.id)">
+                            <p>+</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="buffer"></div>
+            </div>
+        </section>
+        <section id="cart" v-if="screen == 'home'">
+            <h1>Ostukäru</h1>
+            <div class="content cart">
+                <div class="product" v-for="(cartItem, i) in cart">
+                    <p class="category">/ {{ cartItem.item.category }}</p>
+                    <p class="type">{{ cartItem.item.type }}</p>
+                    <div class="row tags">
+                        <p class="cheap" v-if="cartItem.item.price < 5">Ainult {{ cartItem.item.price.toFixed(2) }} €</p>
+                        <p class="low-quantity" v-if="cartItem.item.count <= 10">Ainult {{ cartItem.item.count }} järgi</p>
+                    </div>
+                    <img :src="cartItem.item.imgUrl" :alt="cartItem.item.description">
+                    <p class="name">{{ cartItem.item.name }}</p>
+                    <p class="count">Laos {{ cartItem.item.count }} {{ cartItem.item.count > 1 ? 'tükki' : 'tükk' }}</p>
+                    <div class="row addToCart">
+                        <div class="countButton" v-on:click="decrementCount(cartItem.item.id)">
+                            <p>-</p>
+                        </div>
+                        <div class="column">
+                            <p class="price">{{ cartItem.item.price }} €</p>
+                            <p class="cartCount" v-if="findCartProduct(cartItem.item.id)">{{ findCartProduct(cartItem.item.id).cartCount }} {{ findCartProduct(cartItem.item.id).cartCount == 1 ? 'tükk' : 'tükki' }} ostukärus</p>
+                        </div>
+                        <div class="countButton" v-on:click="incrementCount(cartItem.item.id)">
+                            <p>+</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="buffer"></div>
             </div>

@@ -160,10 +160,27 @@ button:active {
 #home > .products > .product > .name {
     font-weight: 700;
     font-size: 18px;
+    text-transform: capitalize;
 }
-#home > .products > .product > .price {
-    width: 100%;
+#home > .products > .product > .count {
+    font-weight: 500;
+    font-size: 12px;
+
+    color: #888;
+}
+#home > .products > .product > .addToCart {
     padding: 8px 0;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+}
+#home > .products > .product > .addToCart .cartCount {
+    font-weight: 500;
+    font-size: 12px;
+
+    color: #888;
+}
+#home > .products > .product > .addToCart .price {
     text-align: center;
 
     font-weight: 900;
@@ -171,11 +188,19 @@ button:active {
 
     color: #aa8;
 }
-#home > .products > .product > .count {
-    font-weight: 500;
-    font-size: 12px;
+#home > .products > .product > .addToCart .countButton {
+    width: 24px;
+    height: 24px;
+    text-align: center;
 
+    font-weight: 400;
+    font-size: 18px;
+
+    border-radius: 12px;
     color: #888;
+}
+#home > .products > .product > .addToCart .countButton:hover {
+    background-color: #f4f4f4;
 }
 
 

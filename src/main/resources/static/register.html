@@ -16,23 +16,27 @@
 <body style="margin: 0;">
     <div id="app">
         <section id="login">
-            <h1 class="form-signin-heading">Sisse logimine</h1>
+            <h1 class="form-signin-heading">Registreeri</h1>
             <div class="content">
-                <form v-on:submit="UI_onSubmitLogin" method="post" action="/login">
+                <form v-on:submit="UI_onSubmitRegister" method="post" action="/api/user/register">
                     <p class="field">
                         <label for="username">KASUTAJATUNNUS</label>
                         <input type="text" id="username" name="username" placeholder="" required autofocus="">
+                    </p>
+                    <p class="field">
+                        <label for="password">NIMI</label>
+                        <input type="text" id="displayName" name="displayName" placeholder="" required autofocus="">
                     </p>
                     <p class="field">
                         <label for="password">PAROOL</label>
                         <input type="password" id="password" name="password" placeholder="" required>
                     </p>
                     <p class="field">
-                        <input type="checkbox" id="remember-me" name="remember-me">
-                        <label for="remember-me">Püsi sisse logitud?</label>
+                        <label for="imageUrl">PROFIILIPILT</label>
+                        <input type="text" id="imageUrl" name="imageUrl" placeholder="" required>
                     </p>
     
-                    <button type="submit">Sisene</button>
+                    <button type="submit">Registreeru</button>
                 </form>
                 <div class="buffer"></div>
             </div>
