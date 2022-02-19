@@ -81,6 +81,16 @@
                 <div class="buffer"></div>
             </div>
         </section>
+        <section id="user" v-if="screen == 'user' && loggedIn">
+            <div class="row">
+                <object :data="user.imageUrl" type="image/jpg"></object>
+                <div class="column">
+                    <h1>Tere, {{ user.displayName }}!</h1>
+                    <p>({{ user.username }})</p>
+                    <a href="/logout">Logi välja</a>
+                </div>
+            </div>
+        </section>
     </div>   
     <script src="/js/script.js"></script>
 </body>

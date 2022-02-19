@@ -19,6 +19,11 @@ p, h1, h2, h3, h4, h5, h6, a, button, input, label {
 
 a {
     text-decoration: none;
+    color: #000;
+}
+a:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 .row {
@@ -106,11 +111,6 @@ button:active {
 #app > .nav > a {
     font-size: 16px;
     font-weight: 400;
-}
-
-#app > .nav > a:hover {
-    cursor: pointer;
-    text-decoration: underline;
 }
 
 
@@ -219,13 +219,17 @@ button:active {
 
 
 
-
+#login > .row.menu {
+    align-items: center;
+    gap: 16px;
+}
 #login > .content {
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center; /*flex-start*/
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 32px;
     gap: 16px;
 }
 
@@ -255,6 +259,7 @@ button:active {
     border-radius: 4px;
     white-space: nowrap;
 }
+#login .field label[for="text"],
 #login .field label[for="username"],
 #login .field label[for="password"] {
     font-size: 14px;
@@ -273,3 +278,13 @@ button:active {
     outline: none;
 }
 
+#user object {
+    width: 96px;
+    height: 96px;
+    border-radius: 128px;
+    background-color: #000;
+}
+#user > div.row {
+    width: 100%;
+    gap: 16px;
+}
