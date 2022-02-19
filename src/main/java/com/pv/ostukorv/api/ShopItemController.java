@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -82,5 +83,10 @@ public class ShopItemController {
 
         }
         return items.stream().filter(item -> item.getName().toLowerCase(Locale.ROOT).startsWith(name)).collect(Collectors.toSet());
+    }
+
+    @GetMapping("/categories")
+    public Collection<String> getCategories() {
+        return shopItemRepo.getCategory();
     }
 }

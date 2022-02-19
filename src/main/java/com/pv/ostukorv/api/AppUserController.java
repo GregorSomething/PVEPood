@@ -5,6 +5,7 @@ import com.pv.ostukorv.security.data.AppUser;
 import com.pv.ostukorv.security.data.AppUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,7 @@ public class AppUserController {
 
 
     @GetMapping("/get")
+    @PreAuthorize("hasAuthority('cart:use')")
     public @ResponseBody AppUser getUser() {
         String username;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
