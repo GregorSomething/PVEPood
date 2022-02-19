@@ -80,7 +80,7 @@ public class ShopItemController {
                 items.addAll(shopItemRepo.findByType(t));
             }
         } else {
-
+            shopItemRepo.findAll().forEach(items::add);
         }
         return items.stream().filter(item -> item.getName().toLowerCase(Locale.ROOT).startsWith(name)).collect(Collectors.toSet());
     }
