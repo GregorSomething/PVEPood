@@ -17,6 +17,10 @@ p, h1, h2, h3, h4, h5, h6, a, button, input, label {
     font-family: 'Open Sans', 'Helvetica', 'Arial';
 }
 
+a {
+    text-decoration: none;
+}
+
 .row {
     display: flex;
     flex-direction: row;
@@ -58,7 +62,7 @@ button:active {
 
 #app > section {
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: column;
 
     margin: 0 0 0 var(--margin);
     padding: var(--margin) var(--margin) var(--margin) 0;
@@ -75,45 +79,54 @@ button:active {
     height: calc(var(--margin) - var(--product-gap));
     clear: both;
 }
-#app > section > h1 {
-    position: sticky;
+#app > .nav {
+    position: fixed;
+
     top: 0;
+    left: var(--margin);
+    right: var(--margin);
+    height: var(--margin);
 
-    writing-mode: vertical-rl;
-    font-size: 36px;
+    background: transparent;
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.6548978365384616) 50%, rgba(255,255,255,0) 100%);
+
+    align-items: center;
+    gap: 16px;
+}
+
+#app > .nav > * {
     color: #000;
-    text-transform: lowercase;
+}
 
-    backdrop-filter: blur(8px);
-    margin: 0 16px;
-    padding: 16px;
+#app > .nav > h1 {
+    font-size: 36px;
+    font-weight: 900;
+}
 
-    height: 100%;
+#app > .nav > a {
+    font-size: 16px;
+    font-weight: 400;
+}
 
-    background: repeating-linear-gradient(
-        45deg,
-        #0000,
-        #0000 10px,
-        #ddd 10px,
-        #ddd 12px
-    );
+#app > .nav > a:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 
 
 
-#home > .products {
+.products {
     user-select: none;
-    
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: flex-end;
-
+    justify-content: center;
+    height: fit-content;
     gap: var(--product-gap);
 }
 
-#home > .products > .product {
+.products > .product {
     display: flex;
     flex-direction: column;
 
@@ -125,19 +138,19 @@ button:active {
     border: solid 1px #ddd;
     transition: box-shadow 0.2s, border 0.2s;
 }
-#home > .products > .product:hover {
+.products > .product:hover {
     border: solid 1px transparent;
     box-shadow: 0 8px 32px #0002, 0 4px 8px #0004;
 }
-#home > .products > .product > .category {
+.products > .product > .category {
     font-weight: 700;
     font-size: 14px;
 }
-#home > .products > .product > .type {
+.products > .product > .type {
     font-weight: 700;
     font-size: 28px;
 }
-#home > .products > .product > .tags > * {
+.products > .product > .tags > * {
     font-weight: 700;
     font-size: 12px;
     
@@ -148,39 +161,39 @@ button:active {
 
     color: white;
 }
-#home > .products > .product > .tags { gap: 4px; margin-bottom: 8px; }
-#home > .products > .product > .tags > .cheap { background-color: #2c4; }
-#home > .products > .product > .tags > .low-quantity { background-color: #e44; }
+.products > .product > .tags { gap: 4px; margin-bottom: 8px; }
+.products > .product > .tags > .cheap { background-color: #2c4; }
+.products > .product > .tags > .low-quantity { background-color: #e44; }
 
-#home > .products > .product > img {
+.products > .product > img {
     width: 100%;
     height: 120px;
     object-fit: cover;
 }
-#home > .products > .product > .name {
+.products > .product > .name {
     font-weight: 700;
     font-size: 18px;
     text-transform: capitalize;
 }
-#home > .products > .product > .count {
+.products > .product > .count {
     font-weight: 500;
     font-size: 12px;
 
     color: #888;
 }
-#home > .products > .product > .addToCart {
+.products > .product > .addToCart {
     padding: 8px 0;
     gap: 16px;
     justify-content: center;
     align-items: center;
 }
-#home > .products > .product > .addToCart .cartCount {
+.products > .product > .addToCart .cartCount {
     font-weight: 500;
     font-size: 12px;
 
     color: #888;
 }
-#home > .products > .product > .addToCart .price {
+.products > .product > .addToCart .price {
     text-align: center;
 
     font-weight: 900;
@@ -188,7 +201,7 @@ button:active {
 
     color: #aa8;
 }
-#home > .products > .product > .addToCart .countButton {
+.products > .product > .addToCart .countButton {
     width: 24px;
     height: 24px;
     text-align: center;
@@ -199,7 +212,7 @@ button:active {
     border-radius: 12px;
     color: #888;
 }
-#home > .products > .product > .addToCart .countButton:hover {
+.products > .product > .addToCart .countButton:hover {
     background-color: #f4f4f4;
 }
 
@@ -259,3 +272,4 @@ button:active {
     border: none;
     outline: none;
 }
+
