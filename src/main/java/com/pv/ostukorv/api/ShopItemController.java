@@ -82,7 +82,7 @@ public class ShopItemController {
         } else {
             shopItemRepo.findAll().forEach(items::add);
         }
-        return items.stream().filter(item -> item.getName().toLowerCase(Locale.ROOT).startsWith(name)).collect(Collectors.toSet());
+        return items.stream().filter(item -> item.getName().toLowerCase(Locale.ROOT).contains(namef)).collect(Collectors.toSet());
     }
 
     @GetMapping("/categories")
