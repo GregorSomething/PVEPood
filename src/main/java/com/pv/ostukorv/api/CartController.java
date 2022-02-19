@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 @RequestMapping(path = "/api/cart")
@@ -82,7 +83,7 @@ public class CartController {
 
     @PostMapping("/pay")
     @PreAuthorize("hasAuthority('cart:use')")
-    public void pay() {
+    public String pay() {
         String username;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
@@ -100,20 +101,24 @@ public class CartController {
             cart.setDbItems(new HashMap<>());
             data = new UserCartData(cart, itemRepo);
         }
+        AtomicReference<String> res = new AtomicReference<>("");
         data.getDbItems().forEach((id, count) -> {
             Optional<ShopItem> item = itemRepo.findById(id);
             if (item.isPresent()) {
                 ShopItem item1 = item.get();
                 item1.setCount(item1.getCount() - count);
                 if (item1.getCount() <= 0) {
-                    throw new RuntimeException("Soovitud ese on otsas! " + item1.getName());
+                    res.set("Soovitud kaup on otsas! Nimi: " + item1.getName());
+                    return;
                 }
                 itemRepo.save(item1);
             }
         });
+        if (!res.get().isEmpty()) return res.get();
         UserCart cart1 = new UserCart();
         cart1.setUsername(username);
         cart1.setDbItems(new HashMap<>());
         userCartRepo.save(cart1);
+        return "";
     }
 }
