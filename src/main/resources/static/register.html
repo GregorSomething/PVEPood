@@ -21,7 +21,7 @@
                 <a href="/login">Sisene</a>
             </div>
             <div class="content">
-                <form v-on:submit="UI_onSubmitRegister" method="post" action="/api/user/register">
+                <form v-on:submit="UI_onSubmitRegister">
                     <p class="field">
                         <label for="username">KASUTAJATUNNUS</label>
                         <input type="text" id="username" name="username" placeholder="" required autofocus="">
@@ -39,7 +39,7 @@
                         <input type="text" id="imageUrl" name="imageUrl" placeholder="" required>
                     </p>
     
-                    <button type="submit">Registreeru</button>
+                    <input type="submit" title="Registreeru">
                 </form>
                 <div class="buffer"></div>
             </div>

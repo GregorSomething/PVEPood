@@ -20,7 +20,10 @@ const app = Vue.createApp({
                 {id: 2, name: "Rafaello", description: "Human food", price: 6.99, type: "Kommid", category: "Toit", count: 1, imgUrl: 'https://balticfresh.com/image/cache/catalog/April%20products/ferrero-rafaello-15-pcs-800x800.jpg'},
             ],
             // Type: [{cartCount: int, item: {id: int, name: String, description: String, price: float, type: String, category: String, count: int, imgUrl: String}}]
-            cart: []
+            cart: [],
+            category: '-',
+            search: '',
+            categories: ['-']
         };
     },
     computed: {
@@ -65,13 +68,31 @@ const app = Vue.createApp({
         },
 
         UI_onSubmitRegister(event) {
+            event.preventDefault();
             console.log('username:', event.target.elements.username.value);
             console.log('displayName:', event.target.elements.displayName.value);
             console.log('password:', event.target.elements.password.value);
 
             if(!(this.UTIL_checkUsername(event.target.elements.username.value) && this.UTIL_checkDisplayName(event.target.elements.displayName.value) && this.UTIL_checkPassword(event.target.elements.password.value))) {
-                event.preventDefault();
+                return;
             }
+
+            fetch('/api/user/register', {
+                method: "POST",
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `username=${encodeURIComponent(event.target.elements.username.value)}&password=${encodeURIComponent(event.target.elements.password.value)}&displayName=${encodeURIComponent(event.target.elements.displayName.value)}&imageUrl=${encodeURIComponent(event.target.elements.imageUrl.value)}`
+            }).then((res) => {
+                if(res.status == 200) window.location.replace("/login");
+            });
+        },
+
+        /**
+            Must be ran after search string or category has been changed.
+            Updates products list using filters.
+        */
+        UI_applyFilter() {
+            this.API_products(this.search, this.category == '-' ? undefined : this.category)
+                .then(products => this.products = products);
         },
 
         /*  #####################
@@ -93,8 +114,11 @@ const app = Vue.createApp({
             @returns [{id: int, name: String, description: String, price: float, type: String, category: String, count: int, imgUrl: String}]
             Searches for products.
         */
-        async API_products(name, type, category) {
-            return fetch(`api/shop/list?n=${name}&t=${type}&c=${category}`)
+        async API_products(name, category) {
+            let str = `api/shop/list?n=${name}&c=${category}`;
+            if(!category) str = `api/shop/list?n=${name}`;
+            console.log('GET', str);
+            return fetch(str)
                 .then(res => res.json());
         },
         /**
@@ -134,6 +158,14 @@ const app = Vue.createApp({
         */
         async API_isUserLoggedIn() {
             return (await fetch("api/user/get", {redirect: 'manual'})).status == 200;
+        },
+        /**
+            @returns [string]
+            Returns all categories in use, which can be used for filtering
+        */
+        async API_getAllCategories() {
+            return await fetch("/api/shop/categories")
+                .then(res => res.json());
         },
 
 
@@ -179,6 +211,7 @@ const app = Vue.createApp({
                 });
             }
         });
+        this.API_getAllCategories().then(categories => this.categories = ['-', ...categories]);
     }
 }); 
 
