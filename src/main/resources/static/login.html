@@ -16,7 +16,10 @@
 <body style="margin: 0;">
     <div id="app">
         <section id="login">
-            <h1 class="form-signin-heading">Sisse logimine</h1>
+            <div class="row menu">
+                <h1 class="form-signin-heading">Sisse logimine</h1>
+                <a href="/register">Registreeru</a>
+            </div>
             <div class="content">
                 <form v-on:submit="UI_onSubmitLogin" method="post" action="/login">
                     <p class="field">

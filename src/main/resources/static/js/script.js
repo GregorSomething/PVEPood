@@ -4,6 +4,8 @@
 const app = Vue.createApp({
     data() {
         return {
+            loggedIn: false,
+            user: null,
             screen: 'home',
             // Type: [{id: int, name: String, description: String, price: float, type: String, category: String, count: int, imgUrl: String}]
             products: [
@@ -25,6 +27,15 @@ const app = Vue.createApp({
 
     },
     methods: {
+        title() {
+            return {
+                "home": "Tooted",
+                "cart": "Ostukorv",
+                "pay":  "Maksma",
+                "user": "Konto",
+            }[this.screen];
+        },
+
         /*  #########################
             ### UTILITY FUNCTIONS ###
             ######################### */
@@ -115,7 +126,14 @@ const app = Vue.createApp({
          */
         async API_getUser() {
             return fetch("api/user/get")
-                .then(res => res.json());
+               .then(res => res.json())
+               .catch(err => null);
+        },
+        /**
+            @returns true if logged in, false if not logged in
+        */
+        async API_isUserLoggedIn() {
+            return (await fetch("api/user/get", {redirect: 'manual'})).status == 200;
         },
 
 
@@ -128,12 +146,13 @@ const app = Vue.createApp({
             if(cartProduct && cartProduct.cartCount > 0) {
                 cartProduct.cartCount--;
                 this.API_addToCart(id, cartProduct.cartCount);
+                if(cartProduct.cartCount == 0) this.cart.splice(this.cart.indexOf(cartProduct), 1);
             }
         },
         incrementCount(id) {
             let cartProduct = this.findCartProduct(id);
             if(!cartProduct) {
-                this.cart.push({id, cartCount: 1});
+                this.cart.push(cartProduct = {id, item: this.products[id], cartCount: 1});
             } else {
                 cartProduct.cartCount++;
             }
@@ -146,6 +165,19 @@ const app = Vue.createApp({
     mounted() {
         this.API_allProducts().then(products => {
             if(products) this.products = products;
+        });
+        this.API_getUser().then(user => {
+            console.log('user/get:', user);
+            this.user = user;
+        });
+        this.API_isUserLoggedIn().then(isLoggedIn => {
+            this.loggedIn = isLoggedIn;
+
+            if(this.loggedIn) {
+                this.API_getCart().then(cart => {
+                    if(cart && cart.items) this.cart = cart.items;
+                });
+            }
         });
     }
 }); 
