@@ -111,5 +111,9 @@ public class CartController {
                 itemRepo.save(item1);
             }
         });
+        UserCart cart1 = new UserCart();
+        cart1.setUsername(username);
+        cart1.setDbItems(new HashMap<>());
+        userCartRepo.save(cart1);
     }
 }
