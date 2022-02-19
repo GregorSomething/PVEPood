@@ -26,6 +26,17 @@
             <a v-if="loggedIn" href="/logout">Välju</a>
         </div>
         <section id="home" v-if="screen == 'home'">
+            <div class="controls row">
+                <input type="text" placeholder="Otsi tooteid..." v-model="search" @change="UI_applyFilter">
+                <div class="category">
+                    <label for="category">Kategooria:</label>
+                    <select name="category" v-model="category" @change="UI_applyFilter">
+                        <option v-for="option in categories">
+                        {{ option }}
+                        </option>
+                    </select>
+                </div>
+            </div>
             <div class="content products">
                 <div class="product" v-for="(item, i) in products">
                     <p class="category">/ {{ item.category }}</p>
