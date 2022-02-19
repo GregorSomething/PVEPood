@@ -80,7 +80,7 @@ public class CartController {
         }
     }
 
-    @GetMapping("/pay")
+    @PostMapping("/pay")
     @PreAuthorize("hasAuthority('cart:use')")
     public void pay() {
         String username;
