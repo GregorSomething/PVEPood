@@ -39,14 +39,28 @@ public class ShopItemController {
 
     @PostMapping(path = "/add")
     @PreAuthorize("hasAuthority('prod:add')")
-    public void addShopItem(ShopItem item) {
-        item.setId(null);
+    public void addShopItem(@RequestBody ShopItem item) {
+        item.setId(Math.toIntExact(shopItemRepo.count()));
+        item.setName(item.getName().trim());
+        item.setPrice(Math.max(0.01, item.getPrice()));
+        item.setCount(Math.max(1, item.getCount()));
+        item.setCategory(item.getCategory().toLowerCase(Locale.ROOT).replace(" ", ""));
+        item.setType(item.getType().toLowerCase(Locale.ROOT).replace(" ", ""));
+        item.setDescription(item.getDescription().trim());
+        item.setImgUrll(item.getImgUrl().trim());
         shopItemRepo.save(item);
     }
 
     @PostMapping(path = "/update")
     @PreAuthorize("hasAuthority('prod:update')")
     public void updateShopItem(ShopItem item) {
+        item.setName(item.getName().trim());
+        item.setPrice(Math.max(0.01, item.getPrice()));
+        item.setCount(Math.max(1, item.getCount()));
+        item.setCategory(item.getCategory().toLowerCase(Locale.ROOT).replace(" ", ""));
+        item.setType(item.getType().toLowerCase(Locale.ROOT).replace(" ", ""));
+        item.setDescription(item.getDescription().trim());
+        item.setImgUrll(item.getImgUrl().trim());
         shopItemRepo.save(item);
     }
 
