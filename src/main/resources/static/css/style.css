@@ -12,7 +12,7 @@ body {
     box-sizing: border-box;
 }
 
-p, h1, h2, h3, h4, h5, h6, a, button, input, label, select {
+p, h1, h2, h3, h4, h5, h6, a, button, input, textarea, label, select {
     margin: 0;
     font-family: 'Open Sans', 'Helvetica', 'Arial';
 }
@@ -30,6 +30,45 @@ a:hover {
     display: flex;
     flex-direction: row;
 }
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+hr {
+    width: 100%;
+}
+
+textarea.field,
+input.field {
+    resize: none;
+    color: #000;
+    border: none;
+    outline: none;
+
+    border-bottom: solid 1px transparent;
+    padding-bottom: 2px;
+}
+textarea.field:hover,
+input.field:hover {
+    border-bottom: solid 1px #ddd;
+}
+textarea.field:active,
+input.field:active {
+    border-bottom: solid 1px #888;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 
 button, input[type="submit"] {
     padding: 8px 24px;
@@ -163,7 +202,7 @@ button:active, input[type="submit"]:active {
     gap: var(--product-gap);
 }
 
-.products > .product {
+.product {
     display: flex;
     flex-direction: column;
 
@@ -175,19 +214,19 @@ button:active, input[type="submit"]:active {
     border: solid 1px #ddd;
     transition: box-shadow 0.2s, border 0.2s;
 }
-.products > .product:hover {
+.product:not(.no-hover):hover {
     border: solid 1px transparent;
     box-shadow: 0 8px 32px #0002, 0 4px 8px #0004;
 }
-.products > .product > .category {
+.product > .category {
     font-weight: 700;
     font-size: 14px;
 }
-.products > .product > .type {
+.product > .type {
     font-weight: 700;
     font-size: 28px;
 }
-.products > .product > .tags > * {
+.product > .tags > * {
     font-weight: 700;
     font-size: 12px;
     
@@ -198,39 +237,40 @@ button:active, input[type="submit"]:active {
 
     color: white;
 }
-.products > .product > .tags { gap: 4px; margin-bottom: 8px; }
-.products > .product > .tags > .cheap { background-color: #2c4; }
-.products > .product > .tags > .low-quantity { background-color: #e44; }
+.product > .tags { gap: 4px; margin-bottom: 8px; }
+.product > .tags > .cheap { background-color: #2c4; }
+.product > .tags > .low-quantity { background-color: #e44; }
 
-.products > .product > img {
+.product > img,
+.product > object, {
     width: 100%;
     height: 120px;
     object-fit: cover;
 }
-.products > .product > .name {
+.product > .name {
     font-weight: 700;
     font-size: 18px;
     text-transform: capitalize;
 }
-.products > .product > .count {
+.product > .count {
     font-weight: 500;
     font-size: 12px;
 
     color: #888;
 }
-.products > .product > .addToCart {
+.product > .addToCart {
     padding: 8px 0;
     gap: 16px;
     justify-content: center;
     align-items: center;
 }
-.products > .product > .addToCart .cartCount {
+.product > .addToCart .cartCount {
     font-weight: 500;
     font-size: 12px;
 
     color: #888;
 }
-.products > .product > .addToCart .price {
+.product > .addToCart .price {
     text-align: center;
 
     font-weight: 900;
@@ -238,7 +278,7 @@ button:active, input[type="submit"]:active {
 
     color: #aa8;
 }
-.products > .product > .addToCart .countButton {
+.product > .addToCart .countButton {
     width: 24px;
     height: 24px;
     text-align: center;
@@ -249,7 +289,7 @@ button:active, input[type="submit"]:active {
     border-radius: 12px;
     color: #888;
 }
-.products > .product > .addToCart .countButton:hover {
+.product > .addToCart .countButton:hover {
     background-color: #f4f4f4;
 }
 
@@ -323,5 +363,41 @@ button:active, input[type="submit"]:active {
 }
 #user > div.row {
     width: 100%;
+    gap: 16px;
+}
+
+#pay {
+    margin-top: var(--margin);
+}
+#pay .column {
+    width: 100%;
+}
+#pay {
+    min-width: 512px;
+}
+#pay .items {
+    align-items: flex-end;
+}
+#pay .content {
+    width: 100%;
+    align-items: flex-end;
+    gap: 16px;
+}
+#pay .item {
+    width: 100%;
+    gap: 16px;
+}
+#pay .item .name {
+    margin-right: auto;
+}
+#pay .item .amount {
+    color: #888;
+}
+
+
+#new {
+    width: 100%;
+}
+#new > .row {
     gap: 16px;
 }

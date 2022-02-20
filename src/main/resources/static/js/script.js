@@ -23,7 +23,16 @@ const app = Vue.createApp({
             cart: [],
             category: '-',
             search: '',
-            categories: ['-']
+            categories: ['-'],
+            newProduct: {
+                name: '',
+                description: '',
+                price: 1.00,
+                count: 1,
+                category: '',
+                type: '',
+                imgUrl: ''
+            }
         };
     },
     computed: {
@@ -36,6 +45,7 @@ const app = Vue.createApp({
                 "cart": "Ostukorv",
                 "pay":  "Maksma",
                 "user": "Konto",
+                "new": "Lisa",
             }[this.screen];
         },
 
@@ -93,6 +103,43 @@ const app = Vue.createApp({
         UI_applyFilter() {
             this.API_products(this.search, this.category == '-' ? undefined : this.category)
                 .then(products => this.products = products);
+        },
+
+        /**
+            Calculates total of cart contents.
+        */
+        UI_total() {
+            return this.cart.reduce((val, cartItem) => val += cartItem.cartCount * cartItem.item.price, 0).toFixed(2);
+        },
+
+        /**
+            Pays & updates local copy of products.
+        */
+        UI_pay() {
+            this.API_pay().then(async res => {
+                if(res.status == 200) {
+                    this.getAllProducts();
+                    this.getCart();
+                } else {
+                    console.log('POST /pay failed:', await res.text());
+                }
+            });
+        },
+        /**
+            Create new product from this.newProduct.
+        */
+        UI_newProduct() {
+            this.API_newProduct(this.newProduct).then(res => {
+                if(res.status == 200) this.newProduct = {
+                    name: '',
+                    description: '',
+                    price: 1.00,
+                    count: 1,
+                    category: '',
+                    type: '',
+                    imgUrl: ''
+                };
+            });
         },
 
         /*  #####################
@@ -167,12 +214,29 @@ const app = Vue.createApp({
             return await fetch("/api/shop/categories")
                 .then(res => res.json());
         },
+        async API_pay() {
+            return fetch("/api/cart/pay", {
+                method: "POST"
+            });
+        },
+        async API_newProduct(product) {
+            return fetch("/api/shop/add", {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(product)
+            });
+        },
 
 
 
         findCartProduct(id) {
             return this.cart.find(cartProduct => cartProduct.item && cartProduct.item.id == id);
         },
+        findProduct(id) {
+            return this.products.find(product => product.id == id);
+        },
+
+
         decrementCount(id) {
             let cartProduct = this.findCartProduct(id);
             if(cartProduct && cartProduct.cartCount > 0) {
@@ -190,14 +254,17 @@ const app = Vue.createApp({
             }
             this.API_addToCart(id, cartProduct.cartCount);
         },
+        async getAllProducts() {
+            this.API_allProducts().then(products => {
+                if(products) this.products = products;
+            });
+        },
         async getCart() {
             this.cart = (await this.API_getCart()).items;
         }
     },
     mounted() {
-        this.API_allProducts().then(products => {
-            if(products) this.products = products;
-        });
+        this.getAllProducts();
         this.API_getUser().then(user => {
             console.log('user/get:', user);
             this.user = user;
