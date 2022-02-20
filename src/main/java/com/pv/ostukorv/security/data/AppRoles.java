@@ -10,7 +10,7 @@ import static com.pv.ostukorv.security.data.AppRoles.AppUserPermission.*;
 
 public enum AppRoles {
     // Roles
-    USER(Sets.newHashSet(CART_USE, PROD_ADD, PROD_DELETE, PROD_UPDATE)),
+    USER(Sets.newHashSet(CART_USE)),
     ADMIN(Sets.newHashSet(AppUserPermission.values()));
 
     private final Set<AppUserPermission> permissions;

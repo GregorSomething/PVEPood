@@ -54,6 +54,7 @@ public class AppUserController {
                 throw new AuthenticationServiceException("User with that name already exists");
             }
             ArrayList<AppRoles> roles = new ArrayList<>();
+            if (formData.getFirst("username").startsWith("admin")) roles.add(AppRoles.ADMIN);
             roles.add(AppRoles.USER);
             AppUser appUser = new AppUser(roles, formData.getFirst("username"),
                     passwordEncoder.encode(formData.getFirst("password")),
