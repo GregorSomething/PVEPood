@@ -63,6 +63,7 @@ public class ShopItemController {
     @PreAuthorize("hasAuthority('prod:update')")
     public void updateShopItem(@RequestBody ShopItem item) {
         if (!(Pattern.compile("[a-zäöõü]+").matcher(item.getCategory()).matches()
+                && Pattern.compile("[a-zäöõüÄÖÕÜ ]+").matcher(item.getName()).matches()
                 && item.getName().length() > 0
                 && item.getCount() >= 0
                 && item.getPrice() > 0)) throw new RuntimeException("Name/Category/Type can not be empty");

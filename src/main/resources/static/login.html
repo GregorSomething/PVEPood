@@ -22,21 +22,23 @@
             </div>
             <div class="content">
 <!--                <form target="_blank" v-on:submit="UI_onSubmitLogin" method="post" action="/login">-->
-                <form v-on:submit="UI_onSubmitLoginFetch">
-                    <p class="field">
+                <form v-on:submit="UI_onSubmitLogin">
+                    <div class="field">
                         <label for="username">KASUTAJATUNNUS</label>
                         <input type="text" id="username" name="username" placeholder="" required autofocus="">
-                    </p>
-                    <p class="field">
+                    </div>
+                    <div class="field">
                         <label for="password">PAROOL</label>
                         <input type="password" id="password" name="password" placeholder="" required>
-                    </p>
-                    <p class="field">
+                    </div>
+                    <div class="field">
                         <input type="checkbox" id="remember-me" name="remember-me">
                         <label for="remember-me">Püsi sisse logitud?</label>
-                    </p>
+                    </div>
 
                     <input type="submit" value="Sisene">
+
+                    <p class="rule" v-if="log_feedback" @change="log_feedback = ''">{{ log_feedback }}</p>
                 </form>
                 <div class="buffer"></div>
             </div>

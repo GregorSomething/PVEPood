@@ -22,24 +22,34 @@
             </div>
             <div class="content">
                 <form v-on:submit="UI_onSubmitRegister">
-                    <p class="field">
+                    <p class="rule" v-if="reg_username.length < 5">Vähemalt 5 tähemärki</p>
+                    <p class="rule" v-if="!UTIL_checkUsername(reg_username)">Võib sisaldada _</p>
+                    <p class="rule" v-if="!UTIL_checkUsername(reg_username)">Ei tohi sisaldada tühikut</p>
+                    <div class="field">
                         <label for="username">KASUTAJATUNNUS</label>
-                        <input type="text" id="username" name="username" placeholder="" required autofocus="">
-                    </p>
-                    <p class="field">
+                        <input type="text" id="username" name="username" placeholder="" required autofocus="" v-model="reg_username">
+                    </div>
+                    <p class="rule" v-if="reg_displayName.length < 5">Vähemalt 5 tähemärk</p>
+                    <p class="rule" v-if="!UTIL_checkDisplayName(reg_displayName)">Võib sisaldada _ ja tühikut</p>
+                    <div class="field">
                         <label for="password">NIMI</label>
-                        <input type="text" id="displayName" name="displayName" placeholder="" required autofocus="">
-                    </p>
-                    <p class="field">
+                        <input type="text" id="displayName" name="displayName" placeholder="" required autofocus="" v-model="reg_displayName">
+                    </div>
+                    <p class="rule" v-if="reg_password.length < 7">Vähemalt 7 tähemärk</p>
+                    <p class="rule" v-if="!UTIL_checkPassword(reg_password)">Võib sisaldada ' ! " # % & / ( ) = + - *</p>
+                    <div class="field">
                         <label for="password">PAROOL</label>
-                        <input type="password" id="password" name="password" placeholder="" required>
-                    </p>
-                    <p class="field">
+                        <input type="password" id="password" name="password" placeholder="" required v-model="reg_password">
+                    </div>
+                    <p class="rule" v-if="reg_imageUrl.length == 0">Vähemalt 1 tähemärk</p>
+                    <div class="field">
                         <label for="imageUrl">PROFIILIPILT</label>
-                        <input type="text" id="imageUrl" name="imageUrl" placeholder="" required>
-                    </p>
+                        <input type="text" id="imageUrl" name="imageUrl" placeholder="" required v-model="reg_imageUrl">
+                    </div>
     
                     <input type="submit" value="Registreeru">
+
+                    <p class="rule" v-if="reg_feedback" @change="reg_feedback = ''">{{ reg_feedback }}</p>
                 </form>
                 <div class="buffer"></div>
             </div>

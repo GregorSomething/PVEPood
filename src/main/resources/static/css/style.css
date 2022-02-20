@@ -96,6 +96,9 @@ button:active, input[type="submit"]:active {
     box-shadow: inset 0 4px 8px #0001, inset 0 1px 4px #0001;
 }
 
+.rule {
+    color: #d88;
+}
 
 
 
@@ -298,8 +301,6 @@ button:active, input[type="submit"]:active {
 }
 
 
-
-
 #login > .row.menu {
     align-items: center;
     gap: 16px;
@@ -342,7 +343,8 @@ button:active, input[type="submit"]:active {
 }
 #login .field label[for="text"],
 #login .field label[for="username"],
-#login .field label[for="password"] {
+#login .field label[for="password"],
+#login .field label[for="imageUrl"] {
     font-size: 14px;
     font-weight: 700;
     color: #ccc;
@@ -404,4 +406,7 @@ button:active, input[type="submit"]:active {
 }
 #new > .row {
     gap: 16px;
+}
+#new .label {
+    font-weight: 700;
 }

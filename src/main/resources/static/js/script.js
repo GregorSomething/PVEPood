@@ -8,17 +8,7 @@ const app = Vue.createApp({
             user: null,
             screen: 'home',
             // Type: [{id: int, name: String, description: String, price: float, type: String, category: String, count: int, imgUrl: String}]
-            products: [
-                {id: 0, name: "Retro Burger", description: "Human food", price: 3.99, type: "Burger", category: "Toit", count: 347, imgUrl: 'https://mamma.ee/arendus/wp-content/uploads/2020/11/Mamma-Retroburger-230g.jpg'},
-                {id: 1, name: "Kanapitsa Ananassiga", description: "Human food", price: 8.99, type: "Pitsa", category: "Toit", count: 10, imgUrl: 'https://superskypark.ee/wp-content/uploads/2020/01/kana-ananassi-pitsa.jpg'},
-                {id: 2, name: "Rafaello", description: "Human food", price: 6.99, type: "Kommid", category: "Toit", count: 1, imgUrl: 'https://balticfresh.com/image/cache/catalog/April%20products/ferrero-rafaello-15-pcs-800x800.jpg'},
-                {id: 0, name: "Retro Burger", description: "Human food", price: 3.99, type: "Burger", category: "Toit", count: 347, imgUrl: 'https://mamma.ee/arendus/wp-content/uploads/2020/11/Mamma-Retroburger-230g.jpg'},
-                {id: 1, name: "Kanapitsa Ananassiga", description: "Human food", price: 8.99, type: "Pitsa", category: "Toit", count: 10, imgUrl: 'https://superskypark.ee/wp-content/uploads/2020/01/kana-ananassi-pitsa.jpg'},
-                {id: 2, name: "Rafaello", description: "Human food", price: 6.99, type: "Kommid", category: "Toit", count: 1, imgUrl: 'https://balticfresh.com/image/cache/catalog/April%20products/ferrero-rafaello-15-pcs-800x800.jpg'},
-                {id: 0, name: "Retro Burger", description: "Human food", price: 3.99, type: "Burger", category: "Toit", count: 347, imgUrl: 'https://mamma.ee/arendus/wp-content/uploads/2020/11/Mamma-Retroburger-230g.jpg'},
-                {id: 1, name: "Kanapitsa Ananassiga", description: "Human food", price: 8.99, type: "Pitsa", category: "Toit", count: 10, imgUrl: 'https://superskypark.ee/wp-content/uploads/2020/01/kana-ananassi-pitsa.jpg'},
-                {id: 2, name: "Rafaello", description: "Human food", price: 6.99, type: "Kommid", category: "Toit", count: 1, imgUrl: 'https://balticfresh.com/image/cache/catalog/April%20products/ferrero-rafaello-15-pcs-800x800.jpg'},
-            ],
+            products: [],
             // Type: [{cartCount: int, item: {id: int, name: String, description: String, price: float, type: String, category: String, count: int, imgUrl: String}}]
             cart: [],
             category: '-',
@@ -34,7 +24,14 @@ const app = Vue.createApp({
                 type: '',
                 imgUrl: ''
             },
-            sorting: 'A - Z'
+            sorting: 'A - Z',
+            reg_username: '',
+            reg_password: '',
+            reg_displayName: '',
+            reg_imageUrl: '',
+            reg_feedback: '',
+            log_feedback: '',
+            new_feedback: ''
         };
     },
     computed: {
@@ -79,13 +76,25 @@ const app = Vue.createApp({
             ######################### */
 
         UTIL_checkUsername(username) {
-            return /^[a-zA-Z0-9_]{5,100}$/.test(username);
+            return /^[a-zA-Z0-9_äöõüÄÖÕÜ]{5,100}$/.test(username);
         },
         UTIL_checkPassword(password) {
-            return /^[a-zA-Z0-9_'!"#%&/()=+\-*]{4,100}$/.test(password);
+            return /^[a-zA-Z0-9_äöõüÄÖÕÜ'!"#%&/()=+\-*]{7,100}$/.test(password);
         },
         UTIL_checkDisplayName(displayName) {
-            return /^[a-zA-Z0-9_ ]{5,100}$/.test(displayName);
+            return /^[a-zA-Z0-9_ äöõüÄÖÕÜ]{5,100}$/.test(displayName);
+        },
+        UTIL_checkProductCategory(category) {
+            return /^[a-zäöõü]+$/.test(category);
+        },
+        UTIL_checkProductName(name) {
+            return /^[a-zäöõüÄÖÕÜ ]+$/.test(name);
+        },
+        UTIL_checkProductCount(str) {
+            return /^[0-9]+$/.test(str);
+        },
+        UTIL_checkProductPrice(str) {
+            return /^[0-9]+(\.[0-9]+)?$/.test(str) && parseFloat(str) > 0;
         },
 
         /*  ####################
@@ -93,16 +102,6 @@ const app = Vue.createApp({
             #################### */
 
         UI_onSubmitLogin(event) {
-            console.log('username:', event.target.elements.username.value);
-            console.log('password:', event.target.elements.password.value);
-            console.log('remember-me:', event.target.elements["remember-me"].checked);
-
-            if(!(this.UTIL_checkUsername(event.target.elements.username.value) && this.UTIL_checkPassword(event.target.elements.password.value))) {
-                event.preventDefault();
-            }
-        },
-
-        UI_onSubmitLoginFetch(event) {
             event.preventDefault();
 
             if(!(this.UTIL_checkUsername(event.target.elements.username.value) && this.UTIL_checkPassword(event.target.elements.password.value))) {
@@ -130,10 +129,12 @@ const app = Vue.createApp({
 
             fetch('/api/user/register', {
                 method: "POST",
+                redirect: 'manual',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: `username=${encodeURIComponent(event.target.elements.username.value)}&password=${encodeURIComponent(event.target.elements.password.value)}&displayName=${encodeURIComponent(event.target.elements.displayName.value)}&imageUrl=${encodeURIComponent(event.target.elements.imageUrl.value)}`
             }).then((res) => {
                 if(res.status == 200) window.location.replace("/login");
+                else this.reg_feedback = 'Kasutajatunnus juba võetud';
             });
         },
 
@@ -161,8 +162,6 @@ const app = Vue.createApp({
                 if(res.status == 200) {
                     this.getAllProducts();
                     this.getCart();
-                } else {
-                    console.log('POST /pay failed:', await res.text());
                 }
             });
         },
@@ -170,12 +169,13 @@ const app = Vue.createApp({
             Create new product from this.newProduct.
         */
         UI_newProduct() {
-            console.log('product:', this.newProduct);
             this.API_newProduct(this.newProduct).then(res => {
                 if(res.status == 200) {
                     this.UI_resetNewProduct();
                     this.screen = 'home';
                     this.getAllProducts();
+                } else {
+                    this.new_feedback = 'Toote lisamine ebaõnnestus';
                 }
             });
         },
@@ -196,6 +196,8 @@ const app = Vue.createApp({
                     };
                     this.screen = 'home';
                     this.getAllProducts();
+                } else {
+                    this.new_feedback = 'Failed to update product';
                 }
             });
         },

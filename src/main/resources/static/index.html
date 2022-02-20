@@ -55,7 +55,7 @@
                         <p class="cheap" v-if="item.price < 5">Ainult {{ item.price.toFixed(2) }} €</p>
                         <p class="low-quantity" v-if="item.count <= 10">Ainult {{ item.count }} järgi</p>
                     </div>
-                    <img :src="item.imgUrl" :alt="item.description">
+                    <object :data="item.imgUrl" type="image/jpg"></object>
                     <p class="name">{{ item.description }}</p>
                     <p class="count">Laos {{ item.count }} {{ item.count > 1 ? 'tükki' : 'tükk' }}</p>
                     <div class="row addToCart">
@@ -85,7 +85,7 @@
                         <p class="cheap" v-if="cartItem.item.price < 5">Ainult {{ cartItem.item.price.toFixed(2) }} €</p>
                         <p class="low-quantity" v-if="cartItem.item.count <= 10">Ainult {{ cartItem.item.count }} järgi</p>
                     </div>
-                    <img :src="cartItem.item.imgUrl" :alt="cartItem.item.description">
+                    <object :data="cartItem.item.imgUrl" type="image/jpg"></object>
                     <p class="name">{{ cartItem.item.description }}</p>
                     <p class="count">Laos {{ cartItem.item.count }} {{ cartItem.item.count > 1 ? 'tükki' : 'tükk' }}</p>
                     <div class="row addToCart">
@@ -136,32 +136,48 @@
                     <p class="category">/ {{ newProduct.category }}</p>
                     <p class="type">{{ newProduct.name }}</p>
                     <div class="row tags">
-                        <p class="cheap" v-if="newProduct.price < 5">Ainult {{ newProduct.price.toFixed(2) }} €</p>
-                        <p class="low-quantity" v-if="newProduct.count <= 10">Ainult {{ newProduct.count }} järgi</p>
+                        <p class="cheap" v-if="newProduct.price < 5">Ainult {{ (newProduct.price || 0).toFixed(2) }} €</p>
+                        <p class="low-quantity" v-if="newProduct.count <= 10">Ainult {{ newProduct.count || 0 }} järgi</p>
                     </div>
-                    <img :src="newProduct.imgUrl" :alt="newProduct.description">
+                    <object :data="newProduct.imgUrl" type="image/jpg"></object>
                     <p class="name">{{ newProduct.description }}</p>
-                    <p class="count">Laos {{ newProduct.count }} {{ newProduct.count > 1 ? 'tükki' : 'tükk' }}</p>
+                    <p class="count">Laos {{ newProduct.count || 0 }} {{ newProduct.count > 1 ? 'tükki' : 'tükk' }}</p>
                     <div class="row addToCart">
-                        <p class="price">{{ newProduct.price }} €</p>
+                        <p class="price">{{ (newProduct.price || 0).toFixed(2) }} €</p>
                     </div>
                 </div>
 
                 <div class="column">
+                    <p class="rule" v-if="newProduct.category.length == 0">Vähemalt 1 tähemärki</p>
+                    <p class="rule" v-if="!UTIL_checkProductCategory(newProduct.category)">Võib sisaldada ainult tähestiku tähti</p>
+                    <p class="rule" v-if="!UTIL_checkProductCategory(newProduct.category)">Ei tohi sisaldada tühikut</p>
                     <p class="label">Kategooria</p>
                     <input class="category field" placeholder="kategooria" v-model="newProduct.category">
+
+                    <p class="rule" v-if="newProduct.name.length == 0">Vähemalt 1 tähemärki</p>
+                    <p class="rule" v-if="!UTIL_checkProductName(newProduct.name)">Võib sisaldada ainult tühikut ja tähestiku tähti</p>
                     <p class="label">Nimi</p>
                     <input class="type field" placeholder="nimi" v-model="newProduct.name">
+
+                    <p class="rule" v-if="newProduct.imgUrl.length == 0">Vähemalt 1 tähemärki</p>
                     <p class="label">Pildi URL</p>
                     <input class="url field" placeholder="pildi URL" v-model="newProduct.imgUrl">
+
+                    <p class="rule" v-if="newProduct.description.length == 0">Vähemalt 1 tähemärki</p>
                     <p class="label">Kirjeldus</p>
                     <input class="name field" placeholder="kirjeldus" v-model="newProduct.description">
+
+                    <p class="rule" v-if="!UTIL_checkProductCount(newProduct.count)">Peab olema komata täisarv</p>
                     <p class="label">Lao seis</p>
-                    <input type="number" class="category field" placeholder="1" v-model="newProduct.count">
+                    <input type="number" class="category field" placeholder="" v-model="newProduct.count">
+
+                    <p class="rule" v-if="!UTIL_checkProductPrice(newProduct.price)">Peab olema arv</p>
                     <p class="label">Hind</p>
-                    <input type="number" class="price field" placeholder="1.00" v-model="newProduct.price">
+                    <input type="number" class="price field" placeholder="" v-model="newProduct.price">
 
                     <button v-on:click="(newProduct.id ? UI_updateProduct() : UI_newProduct())">{{ newProduct.id ? 'Salvesta' : 'Lisa' }}</button>
+
+                    <p class="rule" v-if="new_feedback" @change="new_feedback = ''">{{ new_feedback }}</p>
                 </div>
             </div>
         </section>
