@@ -67,15 +67,4 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authenticationProvider(this.appAuthenticationProvider);
     }
-    /*
-    @Override
-    @Bean
-    protected UserDetailsService userDetailsService() {
-        UserDetails gregor = User.builder()
-                .username("Gregor")
-                .password(passwordEncoder.encode("pass"))
-                .authorities(AppRoles.ADMIN.getGrantedAuthority())
-                .build();
-        return new AppUserDetailsService(this.appUserRepo);
-    } */
 }
