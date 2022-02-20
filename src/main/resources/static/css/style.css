@@ -242,10 +242,10 @@ button:active, input[type="submit"]:active {
 .product > .tags > .low-quantity { background-color: #e44; }
 
 .product > img,
-.product > object, {
+.product > object {
     width: 100%;
-    height: 120px;
-    object-fit: cover;
+    object-fit: contain;
+    flex: 1;
 }
 .product > .name {
     font-weight: 700;
@@ -291,6 +291,10 @@ button:active, input[type="submit"]:active {
 }
 .product > .addToCart .countButton:hover {
     background-color: #f4f4f4;
+}
+.product .action {
+    width: 100%;
+    text-align: center;
 }
 
 

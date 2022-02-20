@@ -18,9 +18,9 @@
         <div class="row nav">
             <h1>{{ title() }}</h1>
             <a v-if="loggedIn && screen != 'home'" v-on:click="screen = 'home'">Tooted</a>
-            <a v-if="loggedIn && screen != 'cart'" v-on:click="screen = 'cart'">Ostukorv</a>
-            <a v-if="loggedIn && screen != 'pay'" v-on:click="screen = 'pay'">Maksma</a>
-            <a v-if="loggedIn && screen != 'new'" v-on:click="screen = 'new'">Lisa</a>
+            <a v-if="loggedIn && screen != 'cart' && !UI_isAdmin()" v-on:click="screen = 'cart'">Ostukorv</a>
+            <a v-if="loggedIn && screen != 'pay' && !UI_isAdmin()" v-on:click="screen = 'pay'">Maksma</a>
+            <a v-if="loggedIn && screen != 'new' && UI_isAdmin()" v-on:click="screen = 'new'; UI_resetNewProduct();">Lisa</a>
             <a v-if="!loggedIn" href="/login">Sisene</a>
             <a v-if="!loggedIn" href="/register">Registreeru</a>
             <a v-if="loggedIn && screen != 'user'" v-on:click="screen = 'user'">Konto</a>
@@ -33,13 +33,22 @@
                     <label for="category">Kategooria:</label>
                     <select name="category" v-model="category" @change="UI_applyFilter">
                         <option v-for="option in categories">
-                        {{ option }}
+                            {{ option }}
                         </option>
+                    </select>
+                </div>
+                <div class="category">
+                    <label for="category">Sorteeri:</label>
+                    <select name="category" v-model="sorting">
+                        <option>A - Z</option>
+                        <option>Z - A</option>
+                        <option>€ - €€€</option>
+                        <option>€€€ - €</option>
                     </select>
                 </div>
             </div>
             <div class="content products">
-                <div class="product" v-for="(item, i) in products">
+                <div class="product" v-for="item in sortedProducts">
                     <p class="category">/ {{ item.category }}</p>
                     <p class="type">{{ item.name }}</p>
                     <div class="row tags">
@@ -50,17 +59,19 @@
                     <p class="name">{{ item.description }}</p>
                     <p class="count">Laos {{ item.count }} {{ item.count > 1 ? 'tükki' : 'tükk' }}</p>
                     <div class="row addToCart">
-                        <div class="countButton" v-on:click="decrementCount(item.id)">
+                        <div v-if="loggedIn && !UI_isAdmin()" class="countButton" v-on:click="decrementCount(item.id)">
                             <p>-</p>
                         </div>
                         <div class="column">
                             <p class="price">{{ item.price }} €</p>
                             <p class="cartCount" v-if="findCartProduct(item.id)">{{ findCartProduct(item.id).cartCount }} {{ findCartProduct(item.id).cartCount == 1 ? 'tükk' : 'tükki' }} ostukärus</p>
                         </div>
-                        <div class="countButton" v-on:click="incrementCount(item.id)">
+                        <div v-if="loggedIn && !UI_isAdmin()" class="countButton" v-on:click="incrementCount(item.id)">
                             <p>+</p>
                         </div>
                     </div>
+                    <a class="action" v-if="UI_isAdmin()" v-on:click="UI_editProduct(item)">Muuda</a>
+                    <a class="action" v-if="UI_isAdmin()" v-on:click="UI_deleteProduct(item.id)">Kustuta</a>
                 </div>
                 <div class="buffer"></div>
             </div>
@@ -119,7 +130,7 @@
                     <button v-on:click="UI_pay">Maksa</button>
             </div>
         </section>
-        <section id="new" v-if="screen == 'new' && loggedIn">
+        <section id="new" v-if="(screen == 'new' || screen == 'update') && loggedIn">
             <div class="row">
                 <div class="product no-hover">
                     <p class="category">/ {{ newProduct.category }}</p>
@@ -150,7 +161,7 @@
                     <p class="label">Hind</p>
                     <input type="number" class="price field" placeholder="1.00" v-model="newProduct.price">
 
-                    <button v-on:click="UI_newProduct">Lisa</button>
+                    <button v-on:click="(newProduct.id ? UI_updateProduct() : UI_newProduct())">{{ newProduct.id ? 'Salvesta' : 'Lisa' }}</button>
                 </div>
             </div>
         </section>

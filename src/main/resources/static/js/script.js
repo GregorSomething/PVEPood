@@ -25,6 +25,7 @@ const app = Vue.createApp({
             search: '',
             categories: ['-'],
             newProduct: {
+                id: 0,
                 name: '',
                 description: '',
                 price: 1.00,
@@ -32,20 +33,44 @@ const app = Vue.createApp({
                 category: '',
                 type: '',
                 imgUrl: ''
-            }
+            },
+            sorting: 'A - Z'
         };
     },
     computed: {
+        sortedProducts() {
+            let toBeSorted = [...this.products];
 
+            switch(this.sorting) {
+                case 'A - Z':
+                    toBeSorted.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'Z - A':
+                    toBeSorted.sort((a, b) => b.name.localeCompare(a.name));
+                    break;
+                case '€ - €€€':
+                    toBeSorted.sort((a, b) => a.price - b.price);
+                    break;
+                case '€€€ - €':
+                    toBeSorted.sort((a, b) => b.price - a.price);
+                    break;
+            }
+
+            return toBeSorted;
+        }
     },
     methods: {
         title() {
+            if(this.screen == 'new') {
+                return this.newProduct.id ? "Muuda" : "Lisa";
+            }
             return {
                 "home": "Tooted",
                 "cart": "Ostukorv",
                 "pay":  "Maksma",
                 "user": "Konto",
                 "new": "Lisa",
+                "update": "Muuda",
             }[this.screen];
         },
 
@@ -75,6 +100,22 @@ const app = Vue.createApp({
             if(!(this.UTIL_checkUsername(event.target.elements.username.value) && this.UTIL_checkPassword(event.target.elements.password.value))) {
                 event.preventDefault();
             }
+        },
+
+        UI_onSubmitLoginFetch(event) {
+            event.preventDefault();
+
+            if(!(this.UTIL_checkUsername(event.target.elements.username.value) && this.UTIL_checkPassword(event.target.elements.password.value))) {
+                return;
+            }
+
+            fetch('/login', {
+                method: "POST",
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `username=${encodeURIComponent(event.target.elements.username.value)}&password=${encodeURIComponent(event.target.elements.password.value)}&remember-me=${encodeURIComponent(event.target.elements["remember-me"].value)}`
+            }).then((res) => {
+                if(res.status == 200) window.location.replace("/");
+            });
         },
 
         UI_onSubmitRegister(event) {
@@ -129,17 +170,61 @@ const app = Vue.createApp({
             Create new product from this.newProduct.
         */
         UI_newProduct() {
+            console.log('product:', this.newProduct);
             this.API_newProduct(this.newProduct).then(res => {
-                if(res.status == 200) this.newProduct = {
-                    name: '',
-                    description: '',
-                    price: 1.00,
-                    count: 1,
-                    category: '',
-                    type: '',
-                    imgUrl: ''
-                };
+                if(res.status == 200) {
+                    this.UI_resetNewProduct();
+                    this.screen = 'home';
+                    this.getAllProducts();
+                }
             });
+        },
+
+        UI_updateProduct() {
+            console.log('newProduct:', this.newProduct);
+            this.API_updateProduct(this.newProduct).then(res => {
+                if(res.status == 200) {
+                    this.newProduct = {
+                        id: 0,
+                        name: '',
+                        description: '',
+                        price: 1.00,
+                        count: 1,
+                        category: '',
+                        type: '',
+                        imgUrl: ''
+                    };
+                    this.screen = 'home';
+                    this.getAllProducts();
+                }
+            });
+        },
+
+        UI_isAdmin() {
+            return this.user && this.user.roles.includes('ADMIN');
+        },
+
+        UI_editProduct(product) {
+            this.screen = 'new';
+            this.newProduct = product;
+        },
+
+        UI_deleteProduct(id) {
+            this.API_deleteProduct(id)
+                .then(res => {
+                    if(res.status == 200) this.getAllProducts();
+                });
+        },
+        UI_resetNewProduct() {
+            this.newProduct = {
+                name: '',
+                description: '',
+                price: 1.00,
+                count: 1,
+                category: '',
+                type: '',
+                imgUrl: ''
+            };
         },
 
         /*  #####################
@@ -226,6 +311,18 @@ const app = Vue.createApp({
                 body: JSON.stringify(product)
             });
         },
+        async API_updateProduct(product) {
+            return fetch("/api/shop/update", {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(product)
+            });
+        },
+        async API_deleteProduct(id) {
+            return fetch("/api/shop/delete?id="+id, {
+                method: "DELETE"
+            });
+        },
 
 
 
@@ -248,7 +345,7 @@ const app = Vue.createApp({
         incrementCount(id) {
             let cartProduct = this.findCartProduct(id);
             if(!cartProduct) {
-                this.cart.push(cartProduct = {id, item: this.products[id], cartCount: 1});
+                this.cart.push(cartProduct = {id, item: this.findProduct(id), cartCount: 1});
             } else {
                 cartProduct.cartCount++;
             }

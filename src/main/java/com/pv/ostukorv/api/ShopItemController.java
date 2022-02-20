@@ -41,29 +41,38 @@ public class ShopItemController {
     @PostMapping(path = "/add")
     @PreAuthorize("hasAuthority('prod:add')")
     public void addShopItem(@RequestBody ShopItem item) {
-        item.setId(Math.toIntExact(shopItemRepo.count()));
-        if (!(Pattern.compile("[a-z]+").matcher(item.getCategory()).matches()
-                && Pattern.compile("[a-z]+").matcher(item.getType()).matches()
+        // Auto-increment product ID
+        item.setId(Math.toIntExact(shopItemRepo.count())+1);
+
+        // Regex checks & enforce minimum values and lengths
+        if (!(Pattern.compile("[a-zäöõü]+").matcher(item.getCategory()).matches()
                 && item.getName().length() > 0
                 && item.getCount() >= 0
                 && item.getPrice() > 0)) throw new RuntimeException("Name/Category/Type can not be empty");
+
+        item.setType(item.getName().toLowerCase(Locale.ROOT).replace(" ", ""));
         item.setName(item.getName().trim());
         item.setDescription(item.getDescription().trim());
         item.setImgUrll(item.getImgUrl().trim());
+
+        // Store new product
         shopItemRepo.save(item);
     }
 
     @PostMapping(path = "/update")
     @PreAuthorize("hasAuthority('prod:update')")
-    public void updateShopItem(ShopItem item) {
-        if (!(Pattern.compile("[a-z]+").matcher(item.getCategory()).matches()
-                && Pattern.compile("[a-z]+").matcher(item.getType()).matches()
+    public void updateShopItem(@RequestBody ShopItem item) {
+        if (!(Pattern.compile("[a-zäöõü]+").matcher(item.getCategory()).matches()
                 && item.getName().length() > 0
                 && item.getCount() >= 0
                 && item.getPrice() > 0)) throw new RuntimeException("Name/Category/Type can not be empty");
+
+        item.setType(item.getName().toLowerCase(Locale.ROOT).replace(" ", ""));
         item.setName(item.getName().trim());
         item.setDescription(item.getDescription().trim());
         item.setImgUrll(item.getImgUrl().trim());
+
+        // Store changed product
         shopItemRepo.save(item);
     }
 

@@ -44,18 +44,29 @@ public class AppUserController {
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public void registerUser(@RequestBody MultiValueMap<String, String> formData) {
+        // All fields are mandatory
         if (formData.getFirst("username") == null || formData.getFirst("password") == null ||
                 formData.getFirst("displayName") == null || formData.getFirst("imageUrl") == null)
             throw new AuthenticationServiceException("Registration data is not valid");
-        if (Pattern.compile("[a-zA-Z0-9_]{5,100}$").matcher(formData.getFirst("username")).matches()
-                && Pattern.compile("^[a-zA-Z0-9_'!\"#%&/()=+\\-*/]{7,100}$").matcher(formData.getFirst("password")).matches()
-                && Pattern.compile("^[a-zA-Z0-9_ ]{1,100}$").matcher(formData.getFirst("displayName")).matches()) {
+
+        // Regex checks and enforce minimum and maximum lengths
+        if (Pattern.compile("[a-zA-Z0-9_äöõüÄÖÕÜ]{5,100}$").matcher(formData.getFirst("username")).matches()
+                && Pattern.compile("^[a-zA-Z0-9_'!\"#%&/()=+\\-*äöõüÄÖÕÜ]{7,100}$").matcher(formData.getFirst("password")).matches()
+                && Pattern.compile("^[a-zA-Z0-9_ äöõüÄÖÕÜ]{1,100}$").matcher(formData.getFirst("displayName")).matches()) {
+
+            // Avoid accounts with duplicate username. displayName-s can repeat.
             if (appUserRepo.existsById(formData.getFirst("username"))) {
                 throw new AuthenticationServiceException("User with that name already exists");
             }
+
             ArrayList<AppRoles> roles = new ArrayList<>();
-            if (formData.getFirst("username").startsWith("admin")) roles.add(AppRoles.ADMIN);
-            roles.add(AppRoles.USER);
+
+            // Allow one account named 'admin' to have ADMIN rights
+            if (formData.getFirst("username").equals("admin")) roles.add(AppRoles.ADMIN);
+            // All other accounts have USER rights
+            else roles.add(AppRoles.USER);
+
+            // Create & add the account
             AppUser appUser = new AppUser(roles, formData.getFirst("username"),
                     passwordEncoder.encode(formData.getFirst("password")),
                     formData.getFirst("imageUrl"), formData.getFirst("displayName"));
