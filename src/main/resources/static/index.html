@@ -20,6 +20,7 @@
             <a v-if="loggedIn && screen != 'home'" v-on:click="screen = 'home'">Tooted</a>
             <a v-if="loggedIn && screen != 'cart'" v-on:click="screen = 'cart'">Ostukorv</a>
             <a v-if="loggedIn && screen != 'pay'" v-on:click="screen = 'pay'">Maksma</a>
+            <a v-if="loggedIn && screen != 'new'" v-on:click="screen = 'new'">Lisa</a>
             <a v-if="!loggedIn" href="/login">Sisene</a>
             <a v-if="!loggedIn" href="/register">Registreeru</a>
             <a v-if="loggedIn && screen != 'user'" v-on:click="screen = 'user'">Konto</a>
@@ -99,6 +100,57 @@
                     <h1>Tere, {{ user.displayName }}!</h1>
                     <p>({{ user.username }})</p>
                     <a href="/logout">Logi välja</a>
+                </div>
+            </div>
+        </section>
+        <section id="pay" v-if="screen == 'pay' && loggedIn">
+            <div class="row">
+                <div class="column content">
+                    <div class="column items">
+                        <div class="row item" v-for="(cartItem, i) in cart">
+                            <h3 class="name">{{ cartItem.item.name }}</h3>
+                            <p class="amount">{{ findCartProduct(cartItem.item.id).cartCount }} tk</p>
+                            <p class="price">{{ (findCartProduct(cartItem.item.id).cartCount*findCartProduct(cartItem.item.id).item.price).toFixed(2) }} €</p>
+                        </div>
+                        <hr>
+                        <h1 class="total">Kokku: {{ UI_total() }} €</h1>
+                    </div>
+
+                    <button v-on:click="UI_pay">Maksa</button>
+            </div>
+        </section>
+        <section id="new" v-if="screen == 'new' && loggedIn">
+            <div class="row">
+                <div class="product no-hover">
+                    <p class="category">/ {{ newProduct.category }}</p>
+                    <p class="type">{{ newProduct.name }}</p>
+                    <div class="row tags">
+                        <p class="cheap" v-if="newProduct.price < 5">Ainult {{ newProduct.price.toFixed(2) }} €</p>
+                        <p class="low-quantity" v-if="newProduct.count <= 10">Ainult {{ newProduct.count }} järgi</p>
+                    </div>
+                    <img :src="newProduct.imgUrl" :alt="newProduct.description">
+                    <p class="name">{{ newProduct.description }}</p>
+                    <p class="count">Laos {{ newProduct.count }} {{ newProduct.count > 1 ? 'tükki' : 'tükk' }}</p>
+                    <div class="row addToCart">
+                        <p class="price">{{ newProduct.price }} €</p>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <p class="label">Kategooria</p>
+                    <input class="category field" placeholder="kategooria" v-model="newProduct.category">
+                    <p class="label">Nimi</p>
+                    <input class="type field" placeholder="nimi" v-model="newProduct.name">
+                    <p class="label">Pildi URL</p>
+                    <input class="url field" placeholder="pildi URL" v-model="newProduct.imgUrl">
+                    <p class="label">Kirjeldus</p>
+                    <input class="name field" placeholder="kirjeldus" v-model="newProduct.description">
+                    <p class="label">Lao seis</p>
+                    <input type="number" class="category field" placeholder="1" v-model="newProduct.count">
+                    <p class="label">Hind</p>
+                    <input type="number" class="price field" placeholder="1.00" v-model="newProduct.price">
+
+                    <button v-on:click="UI_newProduct">Lisa</button>
                 </div>
             </div>
         </section>

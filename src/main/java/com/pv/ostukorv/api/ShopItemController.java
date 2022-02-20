@@ -42,11 +42,12 @@ public class ShopItemController {
     @PreAuthorize("hasAuthority('prod:add')")
     public void addShopItem(@RequestBody ShopItem item) {
         item.setId(Math.toIntExact(shopItemRepo.count()));
+        if (!(Pattern.compile("[a-z]+").matcher(item.getCategory()).matches()
+                && Pattern.compile("[a-z]+").matcher(item.getType()).matches()
+                && item.getName().length() > 0
+                && item.getCount() >= 0
+                && item.getPrice() > 0)) throw new RuntimeException("Name/Category/Type can not be empty");
         item.setName(item.getName().trim());
-        item.setPrice(Math.max(0.01, item.getPrice()));
-        item.setCount(Math.max(1, item.getCount()));
-        item.setCategory(item.getCategory().toLowerCase(Locale.ROOT).replace(" ", ""));
-        item.setType(item.getType().toLowerCase(Locale.ROOT).replace(" ", ""));
         item.setDescription(item.getDescription().trim());
         item.setImgUrll(item.getImgUrl().trim());
         shopItemRepo.save(item);
