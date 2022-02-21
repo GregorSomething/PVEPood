@@ -31,7 +31,9 @@ const app = Vue.createApp({
             reg_imageUrl: '',
             reg_feedback: '',
             log_feedback: '',
-            new_feedback: ''
+            new_feedback: '',
+            pay_feedback: ''
+
         };
     },
     computed: {
@@ -162,6 +164,8 @@ const app = Vue.createApp({
                 if(res.status == 200) {
                     this.getAllProducts();
                     this.getCart();
+
+                    this.pay_feedback = await res.text();
                 }
             });
         },
@@ -217,6 +221,7 @@ const app = Vue.createApp({
                     if(res.status == 200) this.getAllProducts();
                 });
         },
+
         UI_resetNewProduct() {
             this.newProduct = {
                 name: '',
@@ -227,6 +232,25 @@ const app = Vue.createApp({
                 type: '',
                 imgUrl: ''
             };
+        },
+
+        UI_decrementCount(id) {
+            let cartProduct = this.findCartProduct(id);
+            if(cartProduct && cartProduct.cartCount > 0) {
+                cartProduct.cartCount--;
+                this.API_addToCart(id, cartProduct.cartCount);
+                if(cartProduct.cartCount == 0) this.cart.splice(this.cart.indexOf(cartProduct), 1);
+            }
+        },
+
+        UI_incrementCount(id) {
+            let cartProduct = this.findCartProduct(id);
+            if(!cartProduct) {
+                this.cart.push(cartProduct = {id, item: this.findProduct(id), cartCount: 1});
+            } else {
+                cartProduct.cartCount++;
+            }
+            this.API_addToCart(id, cartProduct.cartCount);
         },
 
         /*  #####################
@@ -336,23 +360,6 @@ const app = Vue.createApp({
         },
 
 
-        decrementCount(id) {
-            let cartProduct = this.findCartProduct(id);
-            if(cartProduct && cartProduct.cartCount > 0) {
-                cartProduct.cartCount--;
-                this.API_addToCart(id, cartProduct.cartCount);
-                if(cartProduct.cartCount == 0) this.cart.splice(this.cart.indexOf(cartProduct), 1);
-            }
-        },
-        incrementCount(id) {
-            let cartProduct = this.findCartProduct(id);
-            if(!cartProduct) {
-                this.cart.push(cartProduct = {id, item: this.findProduct(id), cartCount: 1});
-            } else {
-                cartProduct.cartCount++;
-            }
-            this.API_addToCart(id, cartProduct.cartCount);
-        },
         async getAllProducts() {
             this.API_allProducts().then(products => {
                 if(products) this.products = products;

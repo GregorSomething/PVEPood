@@ -107,8 +107,8 @@ public class CartController {
             if (item.isPresent()) {
                 ShopItem item1 = item.get();
                 item1.setCount(item1.getCount() - count);
-                if (item1.getCount() <= 0) {
-                    res.set("Soovitud kaup on otsas! ID: " + item1.getId());
+                if (item1.getCount() < 0) {
+                    res.set("Soovitud toode '"+ item1.getName() + "' on laost otsas");
                     return;
                 }
                 itemRepo.save(item1);

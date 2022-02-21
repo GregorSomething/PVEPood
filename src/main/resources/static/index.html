@@ -48,6 +48,7 @@
                 </div>
             </div>
             <div class="content products">
+                <p v-if="!sortedProducts.length">Leitud 0 toodet</p>
                 <div class="product" v-for="item in sortedProducts">
                     <p class="category">/ {{ item.category }}</p>
                     <p class="type">{{ item.name }}</p>
@@ -59,14 +60,14 @@
                     <p class="name">{{ item.description }}</p>
                     <p class="count">Laos {{ item.count }} {{ item.count > 1 ? 'tükki' : 'tükk' }}</p>
                     <div class="row addToCart">
-                        <div v-if="loggedIn && !UI_isAdmin()" class="countButton" v-on:click="decrementCount(item.id)">
+                        <div v-if="loggedIn && !UI_isAdmin()" class="countButton" v-on:click="UI_decrementCount(item.id)">
                             <p>-</p>
                         </div>
                         <div class="column">
                             <p class="price">{{ item.price }} €</p>
                             <p class="cartCount" v-if="findCartProduct(item.id)">{{ findCartProduct(item.id).cartCount }} {{ findCartProduct(item.id).cartCount == 1 ? 'tükk' : 'tükki' }} ostukärus</p>
                         </div>
-                        <div v-if="loggedIn && !UI_isAdmin()" class="countButton" v-on:click="incrementCount(item.id)">
+                        <div v-if="loggedIn && !UI_isAdmin()" class="countButton" v-on:click="UI_incrementCount(item.id)">
                             <p>+</p>
                         </div>
                     </div>
@@ -78,6 +79,7 @@
         </section>
         <section id="cart" v-if="screen == 'cart'">
             <div class="content products">
+                <p v-if="!cart.length">Ostukorv on tühi</p>
                 <div class="product" v-for="(cartItem, i) in cart">
                     <p class="category">/ {{ cartItem.item.category }}</p>
                     <p class="type">{{ cartItem.item.name }}</p>
@@ -89,14 +91,14 @@
                     <p class="name">{{ cartItem.item.description }}</p>
                     <p class="count">Laos {{ cartItem.item.count }} {{ cartItem.item.count > 1 ? 'tükki' : 'tükk' }}</p>
                     <div class="row addToCart">
-                        <div class="countButton" v-on:click="decrementCount(cartItem.item.id)">
+                        <div class="countButton" v-on:click="UI_decrementCount(cartItem.item.id)">
                             <p>-</p>
                         </div>
                         <div class="column">
                             <p class="price">{{ cartItem.item.price }} €</p>
                             <p class="cartCount" v-if="findCartProduct(cartItem.item.id)">{{ findCartProduct(cartItem.item.id).cartCount }} {{ findCartProduct(cartItem.item.id).cartCount == 1 ? 'tükk' : 'tükki' }} ostukärus</p>
                         </div>
-                        <div class="countButton" v-on:click="incrementCount(cartItem.item.id)">
+                        <div class="countButton" v-on:click="UI_incrementCount(cartItem.item.id)">
                             <p>+</p>
                         </div>
                     </div>
@@ -127,7 +129,9 @@
                         <h1 class="total">Kokku: {{ UI_total() }} €</h1>
                     </div>
 
-                    <button v-on:click="UI_pay">Maksa</button>
+                    <button v-on:click="UI_pay(); pay_feedback = '';">Maksa</button>
+
+                    <p class="rule" v-if="pay_feedback">{{ pay_feedback }}</p>
             </div>
         </section>
         <section id="new" v-if="(screen == 'new' || screen == 'update') && loggedIn">
@@ -175,9 +179,9 @@
                     <p class="label">Hind</p>
                     <input type="number" class="price field" placeholder="" v-model="newProduct.price">
 
-                    <button v-on:click="(newProduct.id ? UI_updateProduct() : UI_newProduct())">{{ newProduct.id ? 'Salvesta' : 'Lisa' }}</button>
+                    <button v-on:click="(newProduct.id ? UI_updateProduct() : UI_newProduct()); new_feedback = '';">{{ newProduct.id ? 'Salvesta' : 'Lisa' }}</button>
 
-                    <p class="rule" v-if="new_feedback" @change="new_feedback = ''">{{ new_feedback }}</p>
+                    <p class="rule" v-if="new_feedback">{{ new_feedback }}</p>
                 </div>
             </div>
         </section>
