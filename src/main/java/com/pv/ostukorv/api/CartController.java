@@ -83,7 +83,7 @@ public class CartController {
 
     @PostMapping("/pay")
     @PreAuthorize("hasAuthority('cart:use')")
-    public String pay() {
+    public @ResponseBody String pay() {
         String username;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
@@ -108,7 +108,7 @@ public class CartController {
                 ShopItem item1 = item.get();
                 item1.setCount(item1.getCount() - count);
                 if (item1.getCount() <= 0) {
-                    res.set("Soovitud kaup on otsas! Nimi: " + item1.getName());
+                    res.set("Soovitud kaup on otsas! ID: " + item1.getId());
                     return;
                 }
                 itemRepo.save(item1);
