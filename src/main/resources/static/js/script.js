@@ -84,13 +84,13 @@ const app = Vue.createApp({
             return /^[a-zA-Z0-9_äöõüÄÖÕÜ'!"#%&/()=+\-*]{7,100}$/.test(password);
         },
         UTIL_checkDisplayName(displayName) {
-            return /^[a-zA-Z0-9_ äöõüÄÖÕÜ]{5,100}$/.test(displayName);
+            return /^[a-zA-Z0-9_ äöõüÄÖÕÜ]{1,100}$/.test(displayName);
         },
         UTIL_checkProductCategory(category) {
             return /^[a-zäöõü]+$/.test(category);
         },
         UTIL_checkProductName(name) {
-            return /^[a-zäöõüÄÖÕÜ ]+$/.test(name);
+            return /^[a-zA-ZäöõüÄÖÕÜ ]+$/.test(name);
         },
         UTIL_checkProductCount(str) {
             return /^[0-9]+$/.test(str);
