@@ -2,6 +2,8 @@
 
 Simple online e-commerence system made for [ASI karikas 2022](https://asikarikas.ee), using SpringBoot, MariaDB and Vue.js.
 
+Demo available at [Karl-Mihkel Ott's personal website](https://pood.sadblog.xyz/)
+
 ## Features
 
 - Sorting by name or price
