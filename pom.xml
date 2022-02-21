@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.pv</groupId>
 	<artifactId>ostukorv</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<name>Ostukorv</name>
 	<description>Store site for programming competition</description>
 	<properties>
